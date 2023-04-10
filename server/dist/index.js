@@ -122,34 +122,38 @@ var __generator = this && this.__generator || function(thisArg, body) {
         };
     }
 };
+import * as dotenv from "dotenv";
 import cors from "cors";
 import express from "express";
 import axios from "axios";
-import cheerio from "cheerio-without-node-native";
-import { fileURLToPath } from "url";
+import cheerio from "cheerio";
 import helmet from "helmet";
 import morgan from "morgan";
-import path from "path";
-var _process_env = process.env, FRONTEND_URI = _process_env.FRONTEND_URI, PORT = _process_env.PORT;
-var app = express();
-var __filename = fileURLToPath(import.meta.url);
-var __dirname = path.dirname(__filename);
+dotenv.config();
+var _process_env = process.env, FRONTEND_URI = _process_env.FRONTEND_URI, BACKEND_URI = _process_env.BACKEND_URI;
 var corsOptions = {
     origin: FRONTEND_URI,
     optionsSuccessStatus: 200
 };
+var app = express();
 app.use(helmet());
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan("dev"));
-app.use(express.static(path.join(__dirname, "..", "client", "dist")));
-app.get("/scrape", function() {
+//
+app.get("/seo", function() {
     var _ref = _async_to_generator(function(req, res) {
-        var url, _$_attr, _$_attr1, data, $, title, description, keywords, err;
+        var url, response, html, $, title, description, headers, seoData, error;
         return __generator(this, function(_state) {
             switch(_state.label){
                 case 0:
                     url = req.query.url;
+                    if (!url) {
+                        return [
+                            2,
+                            res.status(400).send("Missing URL parameter")
+                        ];
+                    }
                     _state.label = 1;
                 case 1:
                     _state.trys.push([
@@ -163,26 +167,31 @@ app.get("/scrape", function() {
                         axios.get(url)
                     ];
                 case 2:
-                    data = _state.sent().data;
-                    $ = cheerio.load(data);
-                    title = $("title").text().trim();
-                    description = (_$_attr = $('meta[name="description"]').attr("content")) === null || _$_attr === void 0 ? void 0 : _$_attr.trim();
-                    keywords = (_$_attr1 = $('meta[name="keywords"]').attr("content")) === null || _$_attr1 === void 0 ? void 0 : _$_attr1.trim();
-                    res.json({
+                    response = _state.sent();
+                    html = response.data;
+                    $ = cheerio.load(html);
+                    title = $("title").text();
+                    description = $('meta[name="description"]').attr("content");
+                    headers = {};
+                    $("h1, h2, h3, h4, h5, h6").each(function(index, element) {
+                        var tagName = $(element).prop("tagName");
+                        headers[tagName] = headers[tagName] || [];
+                        headers[tagName].push($(element).text());
+                    });
+                    seoData = {
                         title: title,
                         description: description,
-                        keywords: keywords
-                    });
+                        headers: headers
+                    };
+                    res.json(seoData);
                     return [
                         3,
                         4
                     ];
                 case 3:
-                    err = _state.sent();
-                    console.error(err);
-                    res.status(500).json({
-                        message: "Failed to scrape URL"
-                    });
+                    error = _state.sent();
+                    console.error(error);
+                    res.status(500).send("Server error");
                     return [
                         3,
                         4
@@ -198,11 +207,9 @@ app.get("/scrape", function() {
         return _ref.apply(this, arguments);
     };
 }());
-app.get("*", function(_, res) {
-    res.sendFile(path.join(__dirname, "..", "client", "dist", "index.html"));
-});
-var port = PORT || 5000;
+//
+var port = parseInt(BACKEND_URI, 10) || 8080;
 debugger;
-app.listen(port, function() {
-    console.log("Server listening on port ".concat(port));
+app.listen(port, "0.0.0.0", function() {
+    console.log("Server is running on ".concat(port));
 });

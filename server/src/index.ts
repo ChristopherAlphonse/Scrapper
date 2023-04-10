@@ -1,57 +1,78 @@
+import * as dotenv from 'dotenv';
+
 import cors, { CorsOptions } from 'cors';
-import express, { Request, Response } from 'express';
+import express, { Application, Request, Response } from 'express';
 
 import axios from 'axios';
-import cheerio from 'cheerio-without-node-native';
-import { fileURLToPath } from 'url';
+import cheerio from 'cheerio';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import path from 'path';
 
-const { FRONTEND_URI, PORT } = process.env;
-const app = express();
+dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const { FRONTEND_URI, BACKEND_URI } = process.env;
 
 const corsOptions: CorsOptions = {
   origin: FRONTEND_URI,
   optionsSuccessStatus: 200,
 };
 
+const app: Application = express();
 app.use(helmet());
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan('dev'));
 
-app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
+interface SeoData {
+  title: string;
+  description: string;
+  headers: {
+    [key: string]: string[];
+  };
+}
+//
+app.get('/seo', async (req: Request, res: Response) => {
+  const url = req.query.url as string;
 
-app.get('/scrape', async (req: Request, res: Response) => {
-  const { url } = req.query;
+  if (!url) {
+    return res.status(400).send('Missing URL parameter');
+  }
 
   try {
-    const { data } = await axios.get(url as string);
+    const response = await axios.get(url);
+    const html = response.data;
+    const $ = cheerio.load(html);
 
-    const $ = cheerio.load(data);
-    const title = $('title').text().trim();
-    const description = $('meta[name="description"]').attr('content')?.trim();
-    const keywords = $('meta[name="keywords"]').attr('content')?.trim();
+    const title = $('title').text();
+    const description = $('meta[name="description"]').attr('content');
+    const headers: { [key: string]: string[] } = {};
+    $('h1, h2, h3, h4, h5, h6').each(
+      (index: number, element: CheerioElement) => {
+        const tagName = $(element).prop('tagName');
+        headers[tagName] = headers[tagName] || [];
+        headers[tagName].push($(element).text());
+      },
+    );
 
-    res.json({ title, description, keywords });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to scrape URL' });
+    const seoData: SeoData = {
+      title,
+      description,
+      headers,
+    };
+
+    res.json(seoData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
   }
 });
 
-app.get('*', (_, res) => {
-  res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
-});
+//
 
-const port = PORT || 5000;
+const port = parseInt(BACKEND_URI as string, 10) || 8080;
 
 debugger;
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server is running on ${port}`);
 });
