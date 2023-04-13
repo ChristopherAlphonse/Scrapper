@@ -1,16 +1,16 @@
-import * as dotenv from 'dotenv';
-
 import cors, { CorsOptions } from 'cors';
 import express, { Application, Request, Response } from 'express';
 
 import axios from 'axios';
 import cheerio from 'cheerio';
+import dotenv from 'dotenv';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
 dotenv.config();
 
-const { FRONTEND_URI, BACKEND_URI } = process.env;
+const FRONTEND_URI = process.env.FRONTEND_URI as string;
+const BACKEND_URI = process.env.BACKEND_URI as string;
 
 const corsOptions: CorsOptions = {
   origin: FRONTEND_URI,
@@ -30,7 +30,7 @@ interface SeoData {
     [key: string]: string[];
   };
 }
-//
+
 app.get('/seo', async (req: Request, res: Response) => {
   const url = req.query.url as string;
 
@@ -67,11 +67,7 @@ app.get('/seo', async (req: Request, res: Response) => {
   }
 });
 
-//
-
-const port = parseInt(BACKEND_URI as string, 10) || 8080;
-
-debugger;
+const port = parseInt(BACKEND_URI, 10) || 8080;
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server is running on ${port}`);

@@ -122,15 +122,16 @@ var __generator = this && this.__generator || function(thisArg, body) {
         };
     }
 };
-import * as dotenv from "dotenv";
 import cors from "cors";
 import express from "express";
 import axios from "axios";
 import cheerio from "cheerio";
+import dotenv from "dotenv";
 import helmet from "helmet";
 import morgan from "morgan";
 dotenv.config();
-var _process_env = process.env, FRONTEND_URI = _process_env.FRONTEND_URI, BACKEND_URI = _process_env.BACKEND_URI;
+var FRONTEND_URI = process.env.FRONTEND_URI;
+var BACKEND_URI = process.env.BACKEND_URI;
 var corsOptions = {
     origin: FRONTEND_URI,
     optionsSuccessStatus: 200
@@ -140,7 +141,6 @@ app.use(helmet());
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan("dev"));
-//
 app.get("/seo", function() {
     var _ref = _async_to_generator(function(req, res) {
         var url, response, html, $, title, description, headers, seoData, error;
@@ -207,9 +207,7 @@ app.get("/seo", function() {
         return _ref.apply(this, arguments);
     };
 }());
-//
 var port = parseInt(BACKEND_URI, 10) || 8080;
-debugger;
 app.listen(port, "0.0.0.0", function() {
     console.log("Server is running on ".concat(port));
 });
