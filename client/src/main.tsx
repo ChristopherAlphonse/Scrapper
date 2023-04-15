@@ -1,20 +1,11 @@
 import './index.css';
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import React, { StrictMode } from 'react';
-
-import { AnimatePresence } from 'framer-motion';
-import App from './App';
+import Home from './component/Home';
 import ReactDOM from 'react-dom/client';
+import { StrictMode } from 'react';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
-    <BrowserRouter>
-      <AnimatePresence mode="wait">
-        <Routes>
-          <Route path="/" element={<App />} />
-        </Routes>
-      </AnimatePresence>
-    </BrowserRouter>
+    <Home />
   </StrictMode>
 );

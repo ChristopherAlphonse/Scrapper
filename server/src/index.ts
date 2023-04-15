@@ -1,74 +1,47 @@
-import cors, { CorsOptions } from 'cors';
-import express, { Application, Request, Response } from 'express';
-
-import axios from 'axios';
 import cheerio from 'cheerio';
-import dotenv from 'dotenv';
-import helmet from 'helmet';
-import morgan from 'morgan';
+import express from 'express';
+import request from 'request';
 
-dotenv.config();
+const app = express();
+const port = process.env.PORT || 3000;
 
-const FRONTEND_URI = process.env.FRONTEND_URI as string;
-const BACKEND_URI = process.env.BACKEND_URI as string;
-
-const corsOptions: CorsOptions = {
-  origin: FRONTEND_URI,
-  optionsSuccessStatus: 200,
-};
-
-const app: Application = express();
-app.use(helmet());
-app.use(cors(corsOptions));
-app.use(express.json());
-app.use(morgan('dev'));
-
-interface SeoData {
-  title: string;
-  description: string;
-  headers: {
-    [key: string]: string[];
-  };
-}
-
-app.get('/seo', async (req: Request, res: Response) => {
+app.get('/', (req, res) => {
   const url = req.query.url as string;
-
   if (!url) {
-    return res.status(400).send('Missing URL parameter');
+    res.send('Please provide a URL');
+    return;
   }
 
-  try {
-    const response = await axios.get(url);
-    const html = response.data;
-    const $ = cheerio.load(html);
+  request(url, (error, response, html) => {
+    if (!error && response.statusCode == 200) {
+      const $ = cheerio.load(html);
+      const title = $('title').text();
+      const metaDescription = $('meta[name="description"]').attr('content');
+      const metaKeywords = $('meta[name="keywords"]').attr('content');
+      const canonicalUrl = $('link[rel="canonical"]').attr('href');
+      const ogTitle = $('meta[property="og:title"]').attr('content');
+      const ogDescription = $('meta[property="og:description"]').attr(
+        'content',
+      );
+      const ogImage = $('meta[property="og:image"]').attr('content');
 
-    const title = $('title').text();
-    const description = $('meta[name="description"]').attr('content');
-    const headers: { [key: string]: string[] } = {};
-    $('h1, h2, h3, h4, h5, h6').each(
-      (index: number, element: CheerioElement) => {
-        const tagName = $(element).prop('tagName');
-        headers[tagName] = headers[tagName] || [];
-        headers[tagName].push($(element).text());
-      },
-    );
+      const result = {
+        title,
+        metaDescription,
+        metaKeywords,
+        canonicalUrl,
+        ogTitle,
+        ogDescription,
+        ogImage,
+      };
 
-    const seoData: SeoData = {
-      title,
-      description,
-      headers,
-    };
-
-    res.json(seoData);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Server error');
-  }
+      res.json(result);
+    } else {
+      res.send('Error: ' + error);
+    }
+  });
 });
 
-const port = parseInt(BACKEND_URI, 10) || 8080;
-
-app.listen(port, '0.0.0.0', () => {
-  console.log(`Server is running on ${port}`);
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });

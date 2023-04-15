@@ -30,6 +30,8 @@
     "framer-motion": "^10.11.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
+    "react-hook-form": "^7.43.9",
+    "react-icons": "^4.8.0",
     "react-router-dom": "^6.10.0",
     "rimraf": "^5.0.0",
     "vite-plugin-pwa": "^0.14.7"
