@@ -1,5 +1,6 @@
 import './index.css';
 
+import { Helmet } from 'react-helmet';
 import axios from 'axios';
 import { useState } from 'react';
 
@@ -39,6 +40,7 @@ function App() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
+
     try {
       const response = await axios.get<ScrapeData>(
         `http://localhost:8080/scrape?url=${url}`
@@ -54,14 +56,17 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-green-600">
+    <div className="bg-slate-900 flex flex-col items-center justify-center min-h-screen py-2">
+      <Helmet>
+        <title> {`Node Scraper: ${data?.textContent?.title}`}</title>
+      </Helmet>
       <form onSubmit={handleSubmit} className="mb-4">
         <input
           type="text"
           value={url}
           onChange={(event) => setUrl(event.target.value)}
           placeholder="Enter a URL to scrape"
-          className="rounded-l-lg py-2 px-4 border-t mr-0 border-b border-l text-gray-800 border-gray-200 bg-white"
+          className="rounded-l-lg py-2 px-4 border-t mr-0 border-b border-l text-gray-900 border-gray-200 bg-white"
         />
         <button
           type="submit"
@@ -74,11 +79,13 @@ function App() {
       {error && <p className="text-red-500 mb-4">{error}</p>}
       {data && (
         <div className="p-4 border border-gray-400 rounded-md">
-          <h2 className="text-xl font-bold">{data.textContent.title}</h2>
-          <p className="text-sm text-gray-500">{data.content.description}</p>
+          <h2 className="text-base font-bold text-gray-300 mb-3 ">
+            {data.textContent.title}
+          </h2>
+          <p className="text-sm text-gray-300">{data.content.description}</p>
           <ul className="mt-4">
-            {data.href.links.map((link: string) => (
-              <li key={link}>
+            {data.href.links.map((link: string, index: number) => (
+              <li key={`link_${index}`}>
                 <a href={link} className="text-blue-500 hover:underline">
                   {link}
                 </a>
