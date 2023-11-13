@@ -23,22 +23,13 @@
 This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
 
-### Prerequisites
-
-Open your terminal and sure node and nodemon is installed and up to date
-
-- Make a folder
-  ```sh
-  mkdir Fetch
-  cd Fetch
-  ```
-
+ 
 ### Installation
 
 1. Clone the repo
    ```sh
    git clone https://github.com/ChristopherAlphonse/Scrapper.git
-   code .
+   cd Scrapper && code .
    ```
 2. Install packages
    ```sh
