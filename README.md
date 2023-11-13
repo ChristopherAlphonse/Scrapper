@@ -44,6 +44,8 @@ Open your terminal and sure node and nodemon is installed and up to date
    ```sh
    yarn or pnpm i
    ```
-3. ``` js pnpm dev  ```
+3. ```sh
+4.  pnpm dev
+5.  ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
