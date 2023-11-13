@@ -15,3 +15,35 @@
     - os: A module in Node.js that provides information and utilities related to the operating system.
 
 ### The scraper project aims to extract specific information from web pages by making HTTP requests, parsing the HTML response, and extracting relevant data using Cheerio. The extracted data is then returned in a structured format.
+
+
+
+## Getting Started
+
+This is an example of how you may give instructions on setting up your project locally.
+To get a local copy up and running follow these simple example steps.
+
+### Prerequisites
+
+Open your terminal and sure node and nodemon is installed and up to date
+
+- Make a folder
+  ```sh
+  mkdir Fetch
+  cd Fetch
+  ```
+
+### Installation
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/ChristopherAlphonse/Scrapper.git
+   code .
+   ```
+2. Install packages
+   ```sh
+   yarn or pnpm i
+   ```
+3. ``` js pnpm dev  ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
