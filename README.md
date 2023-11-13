@@ -2,9 +2,9 @@
 
 ### This documentation provides an overview and explanation of a scraper project that utilizes various libraries and technologies to extract data from web pages. The project is built using JavaScript and the following libraries and modules:
 
-    - Express: A fast and minimalist web application framework for Node.js that provides a set of features for web and mobile applications.
+     **_Express: A fast and minimalist web application framework for Node.js that provides a set of features for web and mobile applications._ **
 
-    - Cheerio: A server-side implementation of jQuery that allows parsing and manipulating HTML documents using a familiar syntax.
+    _**Cheerio: A server-side implementation of jQuery that allows parsing and manipulating HTML documents using a familiar syntax._**
 
     - Cluster: A module in Node.js that enables the creation of multiple worker processes to handle incoming requests, improving the performance and scalability of the application.
 
