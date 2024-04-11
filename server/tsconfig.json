@@ -1,18 +1,22 @@
 {
   "compilerOptions": {
-    "target": "es6",
     "module": "commonjs",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es6",
+ 
     "sourceMap": true,
     "paths": {
       "*": ["./src/*"]
     },
     "outDir": "./dist",
-    "esModuleInterop": true,
+   
     "forceConsistentCasingInFileNames": true,
 
-    "skipLibCheck": true,
 
-    "strict": true,
+
+
     "noImplicitAny": true,
     "strictNullChecks": true,
     "noImplicitThis": true,

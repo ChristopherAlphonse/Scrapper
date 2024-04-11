@@ -3,7 +3,6 @@ import express, { Application, Request, Response } from 'express';
 import cheerio from 'cheerio';
 import cluster from 'cluster';
 import cors from 'cors';
-import fetch from 'node-fetch';
 import os from 'os';
 
 interface ScrapeData {
@@ -34,12 +33,8 @@ interface ScrapeData {
 }
 
 async function scrape(url: string): Promise<ScrapeData> {
-  const isAbsoluteUrl = url.startsWith('http://') || url.startsWith('https://');
-
-  if (!isAbsoluteUrl) {
-    const baseUrl = window.location.origin;
-    url = `${baseUrl}${url}`;
-  }
+  const nodeFetch = await import('node-fetch');
+  const fetch = nodeFetch.default;
   const response = await fetch(url);
   const html = await response.text();
   const $ = cheerio.load(html);
@@ -60,7 +55,7 @@ async function scrape(url: string): Promise<ScrapeData> {
     },
     href: {
       links: $('a')
-        .map((_, el) => $(el).attr('href') || '')
+        .map((_, el) => $(el).attr('href') ?? '')
         .get(),
       canonical: $("link[rel='canonical']").attr('href'),
       alternateMobile: $(
@@ -83,10 +78,11 @@ async function scrape(url: string): Promise<ScrapeData> {
 const app: Application = express();
 const port: number = 8080;
 
-app.use(cors()); // Allow requests from all origins
+app.use(cors()); 
 
-if (cluster.isMaster) {
-  for (let i = 0; i < os.cpus().length; i++) {
+if (cluster.isPrimary) {
+  const numCPUs = os.cpus().length;
+  for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
   }
 
@@ -95,31 +91,24 @@ if (cluster.isMaster) {
     cluster.fork();
   });
 } else {
-  app.get(
-    '/scrape',
-    async (
-      req: Request<{}, {}, {}, { url: string }>,
-      res: Response<ScrapeData>,
-    ) => {
-      let url: string = req.query.url;
+  app.get('/scrape', async (req: Request, res: Response) => {
+    let url: string = req.query.url as string;
 
-      // Check if URL starts with http or https, add protocol if not present
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        url = `http://${url}`;
-      }
+    // Check if URL starts with http or https, add protocol if not present
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = `http://${url}`;
+    }
 
-      try {
-        const data: ScrapeData = await scrape(url);
-        res.status(200).json(data);
-      } catch (error) {
-        console.error(`Error scraping ${url}: ${error}`);
-        cluster.worker?.disconnect();
-        res.status(500).send(new Error(error.message));
-      }
-    },
-  );
+    try {
+      const data: ScrapeData = await scrape(url);
+      res.status(200).json(data);
+    } catch (error) {
+      console.error(`Error scraping ${url}: ${error}`);
+      res.status(500).send('Error scraping the provided URL');
+    }
+  });
 
   app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Worker ${process.pid} is running on port ${port}`);
   });
 }
