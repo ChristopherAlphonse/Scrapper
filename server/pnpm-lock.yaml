@@ -71,8 +71,8 @@ importers:
         specifier: ^9.1.4
         version: 9.1.4
       nodemon:
-        specifier: ^3.1.0
-        version: 3.1.0
+        specifier: ^3.1.4
+        version: 3.1.4
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
@@ -1223,8 +1223,8 @@ packages:
     resolution: {integrity: sha512-u6fs2AEUljNho3EYTJNBfImO5QTo/J/1Etd+NVdCj7qWKUSN/bSLkZwhDv7I+w/MSC6qJ4cknepkAYykDdK8og==}
     hasBin: true
 
-  nodemon@3.1.0:
-    resolution: {integrity: sha512-xqlktYlDMCepBJd43ZQhjWwMw2obW/JRvkrLxq5RCNcuDDX1DbcPT+qT1IlIIdf+DhnWs90JpTMe+Y5KxOchvA==}
+  nodemon@3.1.4:
+    resolution: {integrity: sha512-wjPBbFhtpJwmIeY2yP7QF+UKzPfltVGtfce1g/bB15/8vCGZj8uxD62b/b9M9/WVgme0NZudpownKN+c0plXlQ==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -2182,7 +2182,7 @@ snapshots:
   bin-version-check@5.0.0:
     dependencies:
       bin-version: 6.0.0
-      semver: 7.5.0
+      semver: 7.6.0
       semver-truncate: 2.0.0
 
   bin-version@6.0.0:
@@ -2949,7 +2949,7 @@ snapshots:
   node-gyp-build@4.8.0:
     optional: true
 
-  nodemon@3.1.0:
+  nodemon@3.1.4:
     dependencies:
       chokidar: 3.5.3
       debug: 4.3.4(supports-color@5.5.0)
