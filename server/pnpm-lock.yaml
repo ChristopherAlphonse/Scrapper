@@ -44,8 +44,8 @@ importers:
       os: {specifier: ^0.1.2, version: 0.1.2}
     devDependencies:
       '@swc/cli':
-        specifier: ^0.3.12
-        version: 0.3.12(@swc/core@1.7.14)(chokidar@3.5.3)
+        specifier: ^0.4.0
+        version: 0.4.0(@swc/core@1.7.14)(chokidar@3.5.3)
       '@swc/core':
         specifier: ^1.7.14
         version: 1.7.14
@@ -180,8 +180,8 @@ packages:
     resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==}
     engines: {node: '>=10'}
 
-  '@swc/cli@0.3.12':
-    resolution: {integrity: sha512-h7bvxT+4+UDrLWJLFHt6V+vNAcUNii2G4aGSSotKz1ECEk4MyEh5CWxmeSscwuz5K3i+4DWTgm4+4EyMCQKn+g==}
+  '@swc/cli@0.4.0':
+    resolution: {integrity: sha512-4JdVrPtF/4rCMXp6Q1h5I6YkYZrCCcqod7Wk97ZQq7K8vNGzJUryBv4eHCvqx5sJOJBrbYm9fcswe1B0TygNoA==}
     engines: {node: '>= 16.14.0'}
     hasBin: true
     peerDependencies:
@@ -1468,11 +1468,6 @@ packages:
     resolution: {integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==}
     hasBin: true
 
-  semver@7.5.0:
-    resolution: {integrity: sha512-+XC0AD/R7Q2mPSRuy2Id0+CGTZ98+8f+KvwirxOKIEyid+XSx6HbC63p+O4IndTHuX5Z+JxQ0TghCkO5Cg/2HA==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.6.0:
     resolution: {integrity: sha512-EnwXhrlwXMk9gKu5/flx5sv/an57AkRplG3hTK68W7FRDN+k+OWBj65M7719OkA82XLBxrcX0KSHj+X5COhOVg==}
     engines: {node: '>=10'}
@@ -1842,7 +1837,7 @@ snapshots:
 
   '@sindresorhus/is@4.6.0': {}
 
-  '@swc/cli@0.3.12(@swc/core@1.7.14)(chokidar@3.5.3)':
+  '@swc/cli@0.4.0(@swc/core@1.7.14)(chokidar@3.5.3)':
     dependencies:
       '@mole-inc/bin-wrapper': 8.0.1
       '@swc/core': 1.7.14
@@ -1851,7 +1846,7 @@ snapshots:
       fast-glob: 3.2.12
       minimatch: 9.0.4
       piscina: 4.4.0
-      semver: 7.5.0
+      semver: 7.6.0
       slash: 3.0.0
       source-map: 0.7.4
     optionalDependencies:
@@ -3164,10 +3159,6 @@ snapshots:
       semver: 6.3.0
 
   semver@6.3.0: {}
-
-  semver@7.5.0:
-    dependencies:
-      lru-cache: 6.0.0
 
   semver@7.6.0:
     dependencies:
